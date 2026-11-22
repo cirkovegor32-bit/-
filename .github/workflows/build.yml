@@ -43,7 +43,7 @@ jobs:
       - name: Build Android APK
         run: |
           mkdir -v -p build/android
-          godot --headless --verbose --path ./my-shooter --export-release "Android" ../build/android/Game.apk
+          godot --headless --verbose --path ./my-shooter --export-debug "Android" ../build/android/Game.apk
       - name: Upload Android Build
         uses: actions/upload-artifact@v4
         with:
