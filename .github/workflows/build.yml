@@ -1,0 +1,51 @@
+name: Build Windows and Android
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  export-windows:
+    name: Windows Export
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup templates
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates/
+          mv /root/.local/share/godot/export_templates/* ~/.local/share/godot/export_templates/
+      - name: Build Windows
+        run: |
+          mkdir -v -p build/windows
+          godot --headless --verbose --path ./my-shooter --export-release "Windows Desktop" ../build/windows/Game.exe
+      - name: Upload Windows Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: Windows-PC
+          path: build/windows
+
+  export-android:
+    name: Android Export
+    runs-on: ubuntu-latest
+    container:
+      image: barichello/godot-ci:4.7.2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup templates
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates/
+          mv /root/.local/share/godot/export_templates/* ~/.local/share/godot/export_templates/
+      - name: Build Android APK
+        run: |
+          mkdir -v -p build/android
+          godot --headless --verbose --path ./my-shooter --export-release "Android" ../build/android/Game.apk
+      - name: Upload Android Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: Android-APK
+          path: build/android
